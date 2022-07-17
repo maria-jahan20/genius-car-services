@@ -1,0 +1,7 @@
+.service-container{
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    box-shadow: 4px 3px 4px 3px rgb(231, 230, 230);
+}
