@@ -1,18 +1,39 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from "react-firebase-hooks/auth";
+import auth from '../../../firebase.init';
 import { useNavigate } from "react-router-dom";
+import SocialLogin from '../SocialLogin/SocialLogin';
+import Loading from '../../../Shared/Loading/Loading';
+
 const Register = () => {
-    // const emailRef=useRef('');
-    // const passRef=useRef('');
-    // const nameRef=useRef('');
-    const handleSubmit= event=>{
+  const [agree,setAgree]=useState(false);
+     const [createUserWithEmailAndPassword,loading,user,error] = useCreateUserWithEmailAndPassword(auth,{sendEmailVerification:true});
+     const [updateProfile, updating, error1] = useUpdateProfile(auth);
+
+     const navigate=useNavigate();
+     if (loading || updating) {
+       return <Loading></Loading>;
+     }
+    const handleSubmit= async(event)=>{ 
         event.preventDefault();
-        const name = event.target.name.value;
+      const name = event.target.name.value;
         const email = event.target.email.value;
         const password = event.target.password.value;
+    //     const agree=event.target.terms.checked;
+        await createUserWithEmailAndPassword(email,password);
+        await updateProfile({ name });
+        alert("Updated profile");
+        navigate('/home');
+     }
+    if(user){
+        navigate('/home');
+        
     }
+   
+
     return (
       <div className="w-50 mx-auto">
         <h2 className="text-center text-primary">Please Register</h2>
@@ -48,12 +69,36 @@ const Register = () => {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
+          <input
+            onClick={() => setAgree(!agree)}
+            type="checkbox"
+            name="terms"
+            id="terms"
+          ></input>
+          <label
+            className={agree ? "ps-2 text-primary " : "ps-2 text-danger"}
+            htmlFor="terms"
+          >
+            Accept Terms and Condition
+          </label>
+          {agree ? (
+            <Button
+              className="w-50  mx-auto d-block mb-2 mt-2"
+              variant="primary"
+              type="submit"
+            >
+              Sign Up
+            </Button>
+          ) : (
+            <Button
+              disabled
+              className="w-50  mx-auto d-block mb-2 mt-2"
+              variant="primary"
+              type="submit"
+            >
+              Sign Up
+            </Button>
+          )}
         </Form>
         <p>
           Already have an account?
@@ -61,6 +106,7 @@ const Register = () => {
             Please Login
           </Link>
         </p>
+        <SocialLogin></SocialLogin>
       </div>
     );
 };
