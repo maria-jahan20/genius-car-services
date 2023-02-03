@@ -1,16 +1,13 @@
 import React from 'react';
 import { Helmet } from "react-helmet-async";
-
-const About = () => {
+const PageTitle = ({title}) => {
     return (
         <div>
             <Helmet>
-                <title>About-Genius-Car-Service</title>
-
+                <title>{title}-Genius-car-services</title>
             </Helmet>
-            <h1>About me?</h1>
         </div>
     );
 };
 
-export default About;
+export default PageTitle;

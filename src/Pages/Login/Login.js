@@ -7,6 +7,9 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import SocialLogin from './SocialLogin/SocialLogin';
 import Loading from '../../Shared/Loading/Loading';
+import { Helmet } from "react-helmet-async";
+import axios from 'axios';
+import useToken from '../../hooks/useToken';
 
 
 
@@ -17,24 +20,29 @@ const Login = () => {
     const location =useLocation();
     let errorElement;
     const [signInWithEmailAndPassword, user, loading, error] =useSignInWithEmailAndPassword(auth);
+    const [token] = useToken(user);
     if (loading ) {
       return <Loading></Loading>;
     }
+    let from = location.state?.from?.pathname || "/";
     
-    const handleSubmit=event=>{
+    const handleSubmit=async event=>{
         event.preventDefault();
         const email=emailRef.current.value;
         const password=passRef.current.value;
-        console.log(email,password);
-        signInWithEmailAndPassword(email,password);
+        // console.log(email,password);
+        await signInWithEmailAndPassword(email,password);
+        
+        
     }
-      let from = location.state?.from?.pathname || "/";
+      
 
-    const navigateRegister=event=>{
+    const navigateRegister=()=>{
         navigate('/register');
     }
-    if(user){
-            navigate(from, { replace: true });
+    if(token){
+       navigate(from, { replace: true });
+           
 
     }
      if (error ) {
@@ -43,6 +51,9 @@ const Login = () => {
     
     return (
       <div className="w-50 mx-auto">
+        <Helmet>
+          <title>Login-Genius-Car-Services</title>
+        </Helmet>
         <h2 className="text-primary text-center mt-12">please log in</h2>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -77,7 +88,7 @@ const Login = () => {
           <Link
             to="/register"
             className="text-danger"
-            onClick={navigateRegister}
+             onClick={navigateRegister}
           >
             Please Register
           </Link>

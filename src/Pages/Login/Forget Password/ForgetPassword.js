@@ -51,7 +51,6 @@ const ForgetPassword = () => {
             Reset Password
           </Button>
         </Form>
-        <ToastContainer></ToastContainer>
       </div>
     );
 };

@@ -11,6 +11,10 @@ import Register from './Pages/Login/Register/Register';
 import CheckOut from './Pages/CheckOut/CheckOut';
 import RequireAuth from './Pages/Login/RequireAuth/RequireAuth';
 import ForgetPassword from './Pages/Login/Forget Password/ForgetPassword';
+import AddService from './Pages/AddService/AddService';
+import ManageServices from './Pages/ManageServices/ManageServices';
+import { ToastContainer } from 'react-toastify';
+import OrderHistory from './Pages/OrderHistory/OrderHistory';
 
 
 function App() {
@@ -28,18 +32,46 @@ function App() {
         <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/register" element={<Register></Register>}></Route>
         <Route
-          path="/checkout"
+          path="/checkout/:serviceId"
           element={
             <RequireAuth>
               <CheckOut></CheckOut>
             </RequireAuth>
           }
         ></Route>
-        <Route path='/forgetpassword' element={<ForgetPassword></ForgetPassword>}></Route>
+        <Route
+          path="/addservice"
+          element={
+            <RequireAuth>
+              <AddService></AddService>
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/manageservices"
+          element={
+            <RequireAuth>
+              <ManageServices></ManageServices>
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/orderhistory"
+          element={
+            <RequireAuth>
+              <OrderHistory></OrderHistory>
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/forgetpassword"
+          element={<ForgetPassword></ForgetPassword>}
+        ></Route>
         <Route path="*" element={<NotFound></NotFound>}></Route>
       </Routes>
 
       <Footer></Footer>
+      <ToastContainer></ToastContainer>
     </div>
   );
 }

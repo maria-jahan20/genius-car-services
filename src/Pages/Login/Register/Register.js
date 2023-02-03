@@ -7,11 +7,16 @@ import auth from '../../../firebase.init';
 import { useNavigate } from "react-router-dom";
 import SocialLogin from '../SocialLogin/SocialLogin';
 import Loading from '../../../Shared/Loading/Loading';
+import PageTitle from '../../../PageTitle/PageTitle';
+import { toast, ToastContainer } from 'react-toastify';
+import useToken from '../../../hooks/useToken';
 
 const Register = () => {
+  <PageTitle title="Register"></PageTitle>
   const [agree,setAgree]=useState(false);
      const [createUserWithEmailAndPassword,loading,user,error] = useCreateUserWithEmailAndPassword(auth,{sendEmailVerification:true});
      const [updateProfile, updating, error1] = useUpdateProfile(auth);
+     const [token]=useToken(user);
 
      const navigate=useNavigate();
      if (loading || updating) {
@@ -19,16 +24,16 @@ const Register = () => {
      }
     const handleSubmit= async(event)=>{ 
         event.preventDefault();
-      const name = event.target.name.value;
+      const displayName = event.target.displayName.value;
         const email = event.target.email.value;
         const password = event.target.password.value;
     //     const agree=event.target.terms.checked;
         await createUserWithEmailAndPassword(email,password);
-        await updateProfile({ name });
-        alert("Updated profile");
+        await updateProfile({ displayName });
+        toast("Profile Updated");
         navigate('/home');
      }
-    if(user){
+    if(token){
         navigate('/home');
         
     }
@@ -42,7 +47,7 @@ const Register = () => {
             <Form.Label>User Name</Form.Label>
             <Form.Control
               type="text"
-              name="name"
+              name="displayName"
               placeholder="Enter User Name"
               required
             />
